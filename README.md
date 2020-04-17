@@ -20,23 +20,22 @@ Members:
  
         df.loc['King, Washington']
  
- -dict:
-  -dict is a dictionary of all counties in the United States organized by state     
-  -Index: ```'state name'```    
-  -Example for subset of df for all counties in 'Washington' state:
+- dict:
+  - dict is a dictionary of all counties in the United States organized by state     
+  - Index: ```'state name'```    
+  - Example for subset of df for all counties in 'Washington' state:
        
            dict['Washington']
 
 Fields:
--**INDEX** : 'county, state':
- -description-- unique county, state combination of county of interest
- -format-- ```'<county_name\{'County','Parish','Borough'}>, <state_name>'``` 
- -type-- String
--'State':
-   
-   description-- the US Sate of the county of interest
-       format-- 'state name'
-       type-- String
+- **INDEX** : 'county, state':
+  - description-- unique county, state combination of county of interest
+  - format-- ```'<county_name\{'County','Parish','Borough'}>, <state_name>'``` 
+  - type-- String
+- 'State':
+  - description-- the US Sate of the county of interest
+  - format-- 'state name'
+  - type-- String
    'Latitudue':
        description-- central latitude of the county of interest
        format-- degree of latitude
