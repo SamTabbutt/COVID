@@ -13,16 +13,26 @@ There are two main sources of high-dimentional data available through this proje
 The location dictionary is the main resource for inquiries regarding location specific variables of the COVID data collected and distributed through the New York Times. locationDict is the primary object in LocationDict.py. It merges data of each county in the United States into one data frame which can be called directly, or can be used to easily return subsets of the data frame based on a specific state of interest. 
 
 Members:
+
    df:
+   
        df is the composite pandas dataframe of all counties in the united states
-       Index: '<county name\{' County',' Parish',' Borough'}>, <state name>'
+       
+       Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
+       
        Example for indexing 'King County, Washington':
-           df.loc['King, Washington']
+       
+           ```df.loc['King, Washington']```
+           
    dict:
+   
        dict is a dictionary of all counties in the United States organized by state
-       Index: 'state name'
+       
+       Index: ```'state name'```
+       
        Example for subset of df for all counties in 'Washington' state:
-           dict['Washington']
+       
+           ```dict['Washington']```
 
 Fields:
     **INDEX** : 'county, state':
