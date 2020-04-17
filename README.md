@@ -33,7 +33,7 @@ Members:
   - Index: ```'state name'```    
   - Example for subset of df for all counties in 'Washington' state:
        
-           dict['Washington']
+        dict['Washington']
 
 Fields:
 - **INDEX** : 'county, state':
