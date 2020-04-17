@@ -14,11 +14,11 @@ The location dictionary is the main resource for inquiries regarding location sp
 
 Members:
 - df:
- - df is the composite pandas dataframe of all counties in the united states
- - Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
- - Example for indexing 'King County, Washington':
+  - df is the composite pandas dataframe of all counties in the united states
+  - Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
+  - Example for indexing 'King County, Washington':
  
-       df.loc['King, Washington']
+        df.loc['King, Washington']
  
  -dict:
   -dict is a dictionary of all counties in the United States organized by state     
