@@ -36,37 +36,37 @@ Fields:
   - description-- the US Sate of the county of interest
   - format-- 'state name'
   - type-- String
-   'Latitudue':
-       description-- central latitude of the county of interest
-       format-- degree of latitude
-       source-- geopy
-       type-- float64
-   'Logitude':
-       description-- central longitude of the county of interest
-       format-- degree of longitude taken from geopy
-       source-- geopy
-       type-- float64
-   'Population':
-       description-- total population of the county of interest
-       format-- taken from 2010 census data
-       source-- US Census
-       type-- int64
-   'Population Density':
-       description-- total population density of the county of interest
-       format-- total population/total land area of county
-       source-- US Census
-       type-- float64
-   'Land area':
-       description-- total land area of the county of interest
-       format-- square miles
-       source-- US Census
-       type-- float64
-   'SIP Order Date':
-       description-- the date of shelter in place order for the state of the county of interest
-       expceptions-- **If no shelter in place order for given state: df.loc['county, state','SIP Order Date'] = '0/0/0'**
-       format-- m/dd/yyyy
-       source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
-       type-- string by default
+- 'Latitudue':
+  - description-- central latitude of the county of interest
+  - format-- degree of latitude
+  - source-- geopy
+  - type-- float64
+- 'Logitude':
+  - description-- central longitude of the county of interest
+  - format-- degree of longitude taken from geopy
+  - source-- geopy
+  - type-- float64
+- 'Population':
+  - description-- total population of the county of interest
+  - format-- taken from 2010 census data
+  - source-- US Census
+  - type-- int64
+- 'Population Density':
+  - description-- total population density of the county of interest
+  - format-- total population/total land area of county
+  - source-- US Census
+  - type-- float64
+- 'Land area':
+  - description-- total land area of the county of interest
+  - format-- square miles
+  - source-- US Census
+  - type-- float64
+- 'SIP Order Date':
+  - description-- the date of shelter in place order for the state of the county of interest
+  - expceptions-- **If no shelter in place order for given state: df.loc['county, state','SIP Order Date'] = '0/0/0'**
+  - format-- m/dd/yyyy
+  - source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
+  - type-- string by default
 
    
 If fitData == True: each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
