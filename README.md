@@ -12,7 +12,8 @@ There are two main sources of high-dimentional data available through this proje
 ### LocationDict
 The location dictionary is the main resource for inquiries regarding location specific variables of the COVID data collected and distributed through the New York Times. locationDict is the primary object in LocationDict.py. It merges data of each county in the United States into one data frame which can be called directly, or can be used to easily return subsets of the data frame based on a specific state of interest. 
 
-**Preparing the dictionary**
+**Preparing the dictionary:**
+
 The .csv files necesarry to run LocationDict are stored in the filepah ```<working_dir>/counties/```. To maintain up-to-date data for these files, run the python file ```<working_dir>/LocationDataManage/SaveLocationData.py```
 
 To include up-to-date statistical data for each county, run the python file ```<working_dir>/StatisticalAnalysis/LogisticalFit.py```. Python scripts for any other fit data of interest should be added to the folder ```<worrking_dir>/StatisticalAnalysis``` and follow the structure of ```LogisticalFit.py``` to operate in a modular fashion to the existing format.
@@ -122,3 +123,12 @@ locationDict is a dynamic pandas dataframe easily adapted to present location-sp
 
 ### An example dashboard displaying results from loogisticalFit.py:
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Ex.gif)
+
+
+The data collected from the NYT COVID-19 data set combined with the data from locationDict create dynamic opportunities for exploring variables of the trends of the virus.
+
+In this example of a dashboard, the logistical fit data which has a mean covariance less than 10^5 was discarded for the distribution display. An issue which is currently being sorted is the parameter C, which is dependent on the population size of the county of interest. The data should be normalized as a percentage of population exposed rather than a total case number representation. In addition, a lot of the fits seem to not be the best fit for a logistical curve. For example, King County, Washington is obviously a logistical trend, however the method of fit did not find the true best fit for the data. 
+
+There are thousands of interesting ways to visualize and analyze this data for a better public understanding of the trends of the virus. Moving forward, I will be working on developing more easily-interpreted visualizations as well as various statistical analysis of location-variable effects on the growth-rate and inflection point of the logistical curves. 
+
+Thanks for reading, and if you have any thoughts, suggestions, or questions feel free to reach out at samtabbutt@gmail.com.
