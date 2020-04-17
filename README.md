@@ -85,7 +85,7 @@ Given the file ```StatisticalAnalysis/LogisticalFit.py``` has been run, populati
 - 'exp max error': the mean covarience of the exponential fit parameters
 - 'first case': the date of the first recorded case of COVID-19
 
-Calling for data in locationDict examples:
+**Examples:**
 - QUERY: Population density of King County, Washington:
    
        locDict = locationDict()
