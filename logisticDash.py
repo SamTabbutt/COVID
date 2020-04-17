@@ -6,6 +6,7 @@ import pandas as pd
 import os
 import math
 from LocationDict import locationDict as ld
+from Bokeh.LaTexLabel import LatexLabel
 import numpy as np
 from scipy import stats as scistats
 from bokeh.plotting import figure, curdoc
@@ -34,6 +35,7 @@ covid_data = covid_data.set_index('date')
 #      Output:
 #             Bokeh histogram plot of the series of the dataframe specified within the range specified
 def makeHist(dataFrame,var,r):
+       varDict = {'0':'a','1':'b','2':'c','3':'d','4':'e'}
        hist, edges = np.histogram(dataFrame[var], 
                             bins = 100,
                             range = [r[0],r[1]])
@@ -42,15 +44,15 @@ def makeHist(dataFrame,var,r):
                        'left': edges[:-1], 
                        'right': edges[1:]})
 
-       p = figure(plot_height = 120, plot_width = 400, 
-              y_axis_label = 'Number of Counties')
+       p = figure(plot_height = 120, plot_width = 400)
 
        src = bm.ColumnDataSource(delays)
        p.quad(source=src,bottom=0, top=var, 
               left='left', right='right', 
               fill_color='red', line_color='black', hover_fill_color = 'navy')
 
-       h = bm.HoverTool(tooltips = [(var+' value left', '@left'),
+
+       h = bm.HoverTool(tooltips = [(varDict[str(var)]+' value left', '@left'),
                             ('Number of counties', '@'+var)])
 
        p.add_tools(h)
@@ -92,6 +94,7 @@ def makeParamsHistograms(paramString,rangeMatrix):
 #Make a list of histogram plots for both the logistic fit and exponential fit
 #      -----For current iteration of dashboard, the exponential fit is not used------
 loghists = makeParamsHistograms('logist',[[-5,40],[-1,.5],[0,2],[0,40],[-20,20]])
+loghists[0].title.text='Logistic Fit Parameter Distribution'
 exphists = makeParamsHistograms('exp',[[0,10],[0,.5],[0,20]])
 
 #getCountyData:
@@ -143,7 +146,7 @@ def getCountyTrend(name,length):
 #      Output:
 #             human readable string presenting the fit parameters, error, and first date of case
 def getParamsString(ar,error,first):
-       return 'Logistical fit paramters:\na: '+str(ar[0])+'\nb: '+str(ar[1])+'\nc: '+str(ar[2])+'\nd: '+str(ar[3])+'\ne: '+str(ar[4])+'\nmax covarience: '+str(1/error)+'\nfirst case: '+str(first)
+       return 'Logistical fit paramters:\na: '+str(ar[0])+'\nb: '+str(ar[1])+'\nc: '+str(ar[2])+'\nd: '+str(ar[3])+'\ne: '+str(ar[4])+'\nmean error: '+str(1/error)+'\nfirst case: '+str(first)
 
 
 
@@ -166,17 +169,28 @@ source2 = bm.ColumnDataSource(data=dict(x=xt,y=yt))
 s.line('x','y',source=source2,line_width=1,color='green')
 
 #Present the fit parameters for the county of interest
-stats = bm.PreText(text=getParamsString(parsed_p,error,first), width=50)
+stats = bm.PreText(text=getParamsString(parsed_p,error,first), width=50,height=300)
+latex = LatexLabel(text="f(x) = \\frac{c}{1+ae^{b{(x-d)}}}+e",
+                   x=50, y=300, x_units='screen', y_units='screen',
+                   render_mode='css', text_font_size='10pt',
+                   background_fill_alpha=0)
+
+
+s.add_layout(latex)
+s.title.text = 'Logistic fit by county'
+
 
 #Display the average logistical fit curve over all parameters [a,b,c,d,e]
 lowErrorDf,paramList = makeLowErrorDf('logist')
-paramMeans = []
-for i in paramList:
-       paramMeans.append(lowErrorDf[i].mean())
-xm,ym = makeLogCurve(paramMeans,20)
+paramMeans = [.850,-.175,.120,10,.8]
+'''for i in paramList:
+       paramMeans.append(lowErrorDf[i].mean())'''
+meanstats = bm.PreText(text=getParamsString(paramMeans,1,0),width=50)
+xm,ym = makeLogCurve(paramMeans,30)
 meanSource = bm.ColumnDataSource(data=dict(x=xm,y=ym))
 meanPlot = figure(width=400,height=200)
 meanPlot.line('x','y',source=meanSource,line_width=2)
+meanPlot.title.text = 'Mean Parameter Logistical Fit'
 
 #Create selectors for selecting a state and county to view the data and model fit for
 state_select = bm.Select(title='State',value='Washington',options=list(covid_data['state'].unique()))
@@ -212,7 +226,7 @@ def update_plots(attr,old,new):
 county_select.on_change('value',update_plots)
 
 #Organize and display
-ops = column(state_select,county_select,stats)
+ops = column(state_select,county_select,stats,meanstats)
 p = column(loghists)
 layout = row(p,column(s,meanPlot),ops)
 
