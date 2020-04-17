@@ -75,33 +75,33 @@ If fitData == True: each county will have associated logistic fit data and expon
 
 Calling for data in locationDict examples:
    QUERY: Population density of King County, Washington:
-       '''
+       ```
        ld = locationDict().dict
        Washington_counties = ld['Washington']
        King_County_Pop_Density = Washington_counties.loc['King, Washington','Population Density']
-       '''
+       ```
        -------------------------------------OR---------------------------------------------------
-       '''
+       ```
        ldf = locationDict().df
        King_County_Pop_Density = ldf.loc['King, Washington', 'Population Density']
-       '''
+       ```
    QUERY: Total population of Washington:
-    '''
+    ```
        ld = locationDict().dict
        Washington_population = ld['Washington']['Population'].sum()
-       '''
+       ```
    QUERY: Total population density of Washington:
-   '''
+   ```
        ld = locationDict().dict
        Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['Land area'].sum()
-       '''
+       ```
    QUERY: Parameter 'a' of the logistical fit for King County, WA:
-   '''
+   ```
        ld = locationDict(fitData=True).dict
        Washington_counties = ld['Washington']
        logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
        a = logistic_fit_params[0]
-       '''
+       ```
 
 An example of the display from the dashboard:
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Ex.gif)
