@@ -16,21 +16,21 @@ Members:
 
    df:
    
-       df is the composite pandas dataframe of all counties in the united states
+   df is the composite pandas dataframe of all counties in the united states
        
-       Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
+   Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
        
-       Example for indexing 'King County, Washington':
+   Example for indexing 'King County, Washington':
        
-           ```df.loc['King, Washington']```
+   ```df.loc['King, Washington']```
            
    dict:
    
-       dict is a dictionary of all counties in the United States organized by state
+   dict is a dictionary of all counties in the United States organized by state
        
-       Index: ```'state name'```
+   Index: ```'state name'```
        
-       Example for subset of df for all counties in 'Washington' state:
+   Example for subset of df for all counties in 'Washington' state:
        
            ```dict['Washington']```
 
