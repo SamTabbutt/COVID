@@ -115,6 +115,10 @@ OR
        logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
        a = logistic_fit_params[0]
 
+## Constructing Dashboards
 
-An example of the display from the dashboard:
+locationDict is a dynamic pandas dataframe easily adapted to present location-specific data for the COVID crisis. 
+
+
+### An example dashboard displaying results from loogisticalFit.py:
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Ex.gif)
