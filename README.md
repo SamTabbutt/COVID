@@ -18,7 +18,7 @@ The .csv files necesarry to run LocationDict are stored in the filepah ```<worki
 
 To include up-to-date statistical data for each county, run the python file ```<working_dir>/StatisticalAnalysis/LogisticalFit.py```. Python scripts for any other fit data of interest should be added to the folder ```<worrking_dir>/StatisticalAnalysis``` and follow the structure of ```LogisticalFit.py``` to operate in a modular fashion to the existing format.
 
-Members:
+**Members:**
 - df:
   - df is the composite pandas dataframe of all counties in the united states
   - Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
