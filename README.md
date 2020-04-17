@@ -12,6 +12,11 @@ There are two main sources of high-dimentional data available through this proje
 ### LocationDict
 The location dictionary is the main resource for inquiries regarding location specific variables of the COVID data collected and distributed through the New York Times. locationDict is the primary object in LocationDict.py. It merges data of each county in the United States into one data frame which can be called directly, or can be used to easily return subsets of the data frame based on a specific state of interest. 
 
+**Preparing the dictionary**
+The .csv files necesarry to run LocationDict are stored in the filepah ```<working_dir>/counties/```. To maintain up-to-date data for these files, run the python file ```<working_dir>/LocationDataManage/SaveLocationData.py```
+
+To include up-to-date statistical data for each county, run the python file ```<working_dir>/StatisticalAnalysis/LogisticalFit.py```. Python scripts for any other fit data of interest should be added to the folder ```<worrking_dir>/StatisticalAnalysis``` and follow the structure of ```LogisticalFit.py``` to operate in a modular fashion to the existing format.
+
 Members:
 - df:
   - df is the composite pandas dataframe of all counties in the united states
@@ -68,7 +73,9 @@ Fields:
   - source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
   - type-- string by default
    
-**If fitData == True:** Given the file ```StatisticalAnalysis/LogisticalFit.py``` has been run, populating the file ```'counties/fitData.csv'```, each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
+**If fitData == True:** 
+
+Given the file ```StatisticalAnalysis/LogisticalFit.py``` has been run, populating the file ```'counties/fitData.csv'```, each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
 - 'logist params': parameters of the fit function y=c/(1+a*(exp)^(b(x-d)))+e in string representation of the numpy array [a b c d e]
 - 'logist max error': the mean covarience of the logistic fit parameters
 - 'exp params': parameters of the fit function y=a*(exp)^(bx)+c in string representation of the numpy array [a b c]
@@ -78,27 +85,32 @@ Fields:
 Calling for data in locationDict examples:
 - QUERY: Population density of King County, Washington:
    
-       ld = locationDict().dict
+       locDict = locationDict()
+       ld = locDict.dict
        Washington_counties = ld['Washington']
        King_County_Pop_Density = Washington_counties.loc['King, Washington','Population Density']
--------------------------------------OR---------------------------------------------------
+OR
        
-       ldf = locationDict().df
+       locDict = locationDict()
+       ldf = locDict.df
        King_County_Pop_Density = ldf.loc['King, Washington', 'Population Density']
        
 - QUERY: Total population of Washington:
 
-       ld = locationDict().dict
+       locDict = locationDict()
+       ld = locDict.dict
        Washington_population = ld['Washington']['Population'].sum()
 
 - QUERY: Total population density of Washington:
 
-       ld = locationDict().dict
+       locDict = locationDict()
+       ld = locDict.dict
        Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['Land area'].sum()
 
 - QUERY: Parameter 'a' of the logistical fit for King County, WA:
 
-       ld = locationDict(fitData=True).dict
+       locDict = locationDict(fitData=True)
+       ld = locDict.dict
        Washington_counties = ld['Washington']
        logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
        a = logistic_fit_params[0]
