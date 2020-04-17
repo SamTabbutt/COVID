@@ -67,44 +67,42 @@ Fields:
   - format-- ```<m/dd/yyyy>```
   - source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
   - type-- string by default
-
    
-If fitData == True: each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
-   'logist params': parameters of the fit function y=c/(1+a*(exp)^(b(x-d)))+e in string representation of the numpy array [a b c d e]
-   'logist max error': the mean covarience of the logistic fit parameters
-   'exp params': parameters of the fit function y=a*(exp)^(bx)+c in string representation of the numpy array [a b c]
-   'exp max error': the mean covarience of the exponential fit parameters
-   'first case': the date of the first recorded case of COVID-19
+**If fitData == True:** Given the file ```StatisticalAnalysis/LogisticalFit.py``` has been run, populating the file ```'counties/fitData.csv'```, each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
+- 'logist params': parameters of the fit function y=c/(1+a*(exp)^(b(x-d)))+e in string representation of the numpy array [a b c d e]
+- 'logist max error': the mean covarience of the logistic fit parameters
+- 'exp params': parameters of the fit function y=a*(exp)^(bx)+c in string representation of the numpy array [a b c]
+- 'exp max error': the mean covarience of the exponential fit parameters
+- 'first case': the date of the first recorded case of COVID-19
 
 Calling for data in locationDict examples:
-   QUERY: Population density of King County, Washington:
-       ```
+- QUERY: Population density of King County, Washington:
+   
        ld = locationDict().dict
        Washington_counties = ld['Washington']
        King_County_Pop_Density = Washington_counties.loc['King, Washington','Population Density']
-       ```
-       -------------------------------------OR---------------------------------------------------
-       ```
+-------------------------------------OR---------------------------------------------------
+       
        ldf = locationDict().df
        King_County_Pop_Density = ldf.loc['King, Washington', 'Population Density']
-       ```
-   QUERY: Total population of Washington:
-    ```
+       
+- QUERY: Total population of Washington:
+
        ld = locationDict().dict
        Washington_population = ld['Washington']['Population'].sum()
-       ```
-   QUERY: Total population density of Washington:
-   ```
+
+- QUERY: Total population density of Washington:
+
        ld = locationDict().dict
        Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['Land area'].sum()
-       ```
-   QUERY: Parameter 'a' of the logistical fit for King County, WA:
-   ```
+
+- QUERY: Parameter 'a' of the logistical fit for King County, WA:
+
        ld = locationDict(fitData=True).dict
        Washington_counties = ld['Washington']
        logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
        a = logistic_fit_params[0]
-       ```
+
 
 An example of the display from the dashboard:
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Ex.gif)
