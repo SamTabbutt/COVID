@@ -3,9 +3,22 @@ This project combines data from various sources in attempt to provide accessible
 
 There are two main sources of high-dimentional data available through this project. The first is the raw data cloned from the [New York Times COVID-19 database](https://github.com/nytimes/covid-19-data), including case and death data from each county in the United States. This data is available through a .csv file. The second is a dynamic Pandas dataFrame as a conglomerate of data scraped from three sources. 
 
+## In-progress updates:
 
+The project is currently under rennovation to fit a modular model for updating the location data, including well-documented meta-data information and a format for easily contributing further data from various sources to the project. The new structure can be thought of as five main processes:
 
-## Project Layout
+**The Processes:**
+- Process 1: Data is located from a source
+- Process 2: Data is formatted into a common domain using the ```PreprocessingModule.py``` format
+- Process 3: The unique data module is run by ```RunProcessingModule.py``` and returns a data frame
+- Process 4: The dataframe is passed through a format verification gate and, if properly formatted, the meta data for that set is recorded in ```LocationDataManage/metaData.csv```, and the preprocessed data is saved as a unique .csv file in ```LocationDataManage/```
+- Process 5: The data is called by ```LocationDict.py``` and mutible to visualize and analyze. 
+
+Here is a general layout of the new project structure:
+
+![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Layout 2.jpg)
+
+## Phasing out the old project layout
 
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Layout.jpg)
 
@@ -134,3 +147,5 @@ In this example of a dashboard, the logistical fit data which has a mean covaria
 There are thousands of interesting ways to visualize and analyze this data for a better public understanding of the trends of the virus. Moving forward, I will be working on developing more easily-interpreted visualizations as well as various statistical analysis of location-variable effects on the growth-rate and inflection point of the logistical curves. 
 
 Thanks for reading, and if you have any thoughts, suggestions, or questions feel free to reach out at samtabbutt@gmail.com.
+
+

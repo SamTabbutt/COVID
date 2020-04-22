@@ -92,91 +92,36 @@
 import pandas as pd
 import numpy as np
 import os
+from glob import glob
 
 working_dir = os.path.dirname(os.path.realpath(__file__))
-county_folder = os.path.join(working_dir,'counties')
+county_folder = os.path.join(working_dir,'PreprocessedCountyData')
 geopy_locs_path = os.path.join(county_folder,'CountyLocationData.csv')
 census_data_path = os.path.join(county_folder,'census.csv')
 
 #create dict class to initialize a dict to call on location data
 class locationDict:
-    def __init__(self,fitData=False):
-        self.fitData = fitData
+    def __init__(self,useAll=True,keys=[]):
+        self.useAll = useAll
         self.df = self.makeCompositeDf()
         self.dict =  self.makeDict(self.df)
 
     def makeCompositeDf(self):
         #Build stateDict to call on for specific location data
-        #Create dataframe from coordinate and census data respectively
-        geopy_df = pd.read_csv(geopy_locs_path)
-        census_df = pd.read_csv(census_data_path, encoding = "ISO-8859-1")
-
-        #Clean census data 
-        #Drop columns without intrinsic properties
-        census_df = census_df.drop(['Id','Id2','Target Geo Id','Target Geo Id2'],axis=1)
-        #Rename columns for easy calling
-        new_cols = []
-        for col in census_df.columns:
-            if 'Area' in col:
-                newName = col.split(' - ')[1]
-                new_cols.append(newName)
-            elif 'Density' in col:
-                newName = col.split(' - ')[1]+' Density'
-                new_cols.append(newName)
-            else:
-                new_cols.append(col)
-        census_df.columns = new_cols
-
-        #Function for pulling state name out of 'Geographic area' column
-        def grabState(entry):
-            try:
-                stateName = entry.split(' - ')[1]
-            except:
-                stateName = entry.split(' - ')[0]
-            return stateName
-
-        #To create homogeneous data aligned with NYT covid-19 data, remove 'County', 'Parish', and 'Borough' from census data
-        def removeTag(entry):
-            if 'County' in entry:
-                entry = entry.replace(' County','')
-            if 'Parish' in entry:
-                entry = entry.replace(' Parish','')
-            if 'Bureau' in entry:
-                entry = entry.replace(' Borough','')
-            return entry
-
-        #Pull state name from geographic area column
-        census_df['State'] = census_df['Geographic area'].apply(grabState)
-        census_df = census_df[census_df['Geographic area.1'].str.contains("County") | census_df['Geographic area.1'].str.contains("Parish")| census_df['Geographic area.1'].str.contains("City")]
-        #Remove all 'County', 'Parish', etc phrases
-        census_df['Geographic area.1'] = census_df['Geographic area.1'].apply(removeTag)
-
-        #Create 'county, state' column for index to match with coordinate dataframe
-        census_df['County, state'] = census_df['Geographic area.1'] +', ' +census_df['State']
-        #Set index as 'county, state' format
-        census_df = census_df.set_index('County, state')
-        #Remove strings from population column and set type to float
-        census_df['Population'] = census_df['Population'].apply(lambda x:x.split('(')[0]).astype('float64')
-        #Drop unnecesarry columns
-        census_df = census_df.drop('Geographic area.1', axis=1)
-        census_df = census_df.drop('Geographic area',axis=1)
-
-        #Louisiana calls their counties parishes, remove word 'County' from all county, states
-        geopy_df['county, state'] = geopy_df['county, state'].apply(removeTag)
-        #Set index of coordinate dataframe to same format ass census dataframe index
-        geopy_df = geopy_df.set_index('county, state')
-        #Break up lat, long column into two columns and drop lat/long
-        geopy_df['Latitude'] = geopy_df['County Lat/long'].apply(lambda x:x.split(', ')[0]).astype('float64')
-        geopy_df['Longitude'] = geopy_df['County Lat/long'].apply(lambda x:x.split(', ')[1]).astype('float64')
-        geopy_df = geopy_df.drop('County Lat/long',axis=1)
-        #Drop unecesarry columns
-        geopy_df = geopy_df.loc[:, ~geopy_df.columns.str.contains('^Unnamed')]
+        #Create dataframe from coordinate and census data respectively        
 
         #Merge the dataframes by index
-        fullcounty_df = geopy_df.merge(right=census_df,how='right',left_index=True,right_index=True)
-        if self.fitData:
-            logDF = pd.read_csv(os.path.join(county_folder,'fitData.csv')).set_index('County, state')
-            fullcounty_df = fullcounty_df.merge(logDF,left_index=True,right_index=True)
+        if self.useAll:
+            preprocessed_data_frames = []
+            for countyData in glob(county_folder+'/*'):
+                preprocessed_data_frames.append(pd.read_csv(countyData.set_index('county, state')))
+            fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
+        else:
+            preprocessed_data_frames = []
+            for countyData in glob(county_folder+'/*'):
+                if countyData.split('/')[-1] in keys:
+                    preprocessed_data_frames.append(pd.read_csv(countyData.set_index('county, state')))
+            fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
         return fullcounty_df
     
     def makeDict(self,frame):

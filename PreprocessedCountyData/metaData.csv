@@ -1,0 +1,4 @@
+outputFileName,moduleClassName,source,domain,author,field count,field names,field types,last updated
+shelterData,ShelterData,finra.org,CensusCounties,finra,1,['SIP Order Date'],['object'],2020-04-22 13:24:33.235443
+censusData,CensusData,US 2010 Census,CensusCounties,United States Census Bureau,8,"['Population', 'Housing units', 'Total area', 'Water area', 'Land area', 'Population Density', 'Housing units Density', 'State']","['float64', 'object', 'float64', 'float64', 'float64', 'float64', 'float64', 'object']",2020-04-22 13:24:33.389513
+countyCoordinates,GeoData,geopy nominatim,CensusCounties,Geopy data,2,"['Latitude', 'Longitude']","['object', 'object']",2020-04-22 13:24:33.474520

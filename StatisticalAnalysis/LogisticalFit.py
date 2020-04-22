@@ -67,5 +67,6 @@ for i,county_data in enumerate(covid_county_groupings):
         print('not found',state,county_data[0])
 
 #Save parameter and error values associated with each county under <working_dir>/counties/fitData.csv
-logData = pd.DataFrame(density_data,columns=['County, state','logist params','logist max error','exp params','exp max error','first case'])
+logData = pd.DataFrame(density_data,columns=['county, state','logist params','logist max error','exp params','exp max error','first case'])
+logData = logData.set_index('county, state')
 logData.to_csv(os.path.join(working_dir,'counties/fitData.csv'))

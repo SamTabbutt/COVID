@@ -7,45 +7,50 @@ import pandas as pd
 import numpy as np
 from geopy.geocoders import Nominatim
 import os
+from .PreprocessingModule import DataModule
 
-#Define the path directories to the .csv files of interest
-current_dir = os.path.dirname(os.path.realpath(__file__))
-working_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
-data_dir = os.path.join(working_dir,'covid-19-data')
-county_path = os.path.join(data_dir,'us-counties.csv')
+class GeoData(DataModule):
+    def processData(self,df_init):
+        #do_geocode:
+        #Input: location string
+        #If the geocode database recognizes the the county in <county>, <state> format: return geocode object
+        #Else: return a geocode object of <state>
+        def do_geocode(county):
+            locator = Nominatim(user_agent="myGeocoder")
+            try:
+                return locator.geocode(county,featuretype='county')
+            except:
+                return do_geocode(county.split(', ')[0])
 
-#Create pandas dataframe of NYT COVID-19 county data
-df = pd.read_csv(county_path)
+        #getCoord:
+        #Input: location string
+        #If the geocode object has valid latitude and longitude fields: return '<latitude>, <longitude>'
+        #Else: return '0, 0'
+        def getCoord(county):
+            #location = do_geocode(county)
+            try:
+                '''print(county,'found.','Lat:',location.latitude,'Long:',location.longitude)
+                return str(location.latitude)+', '+str(location.longitude)'''
+                return '0, 0'
+            except:
+                print(county, "not found")
+                return '0, 0'
 
-#do_geocode:
-#Input: location string
-#If the geocode database recognizes the the county in <county>, <state> format: return geocode object
-#Else: return a geocode object of <state>
-def do_geocode(county):
-    locator = Nominatim(user_agent="myGeocoder")
-    try:
-        return locator.geocode(county,featuretype='county')
-    except:
-        return do_geocode(county.split(', ')[0])
+        #Create DataFrame of unique 'county, state' objects
+        #   There are many repeated county names throughout the country
+        uniqueCounty = pd.DataFrame()
+        uniqueCounty['county, state'] = df_init.index
+        uniqueCounty['County Lat/long'] = uniqueCounty['county, state'].apply(getCoord)
+        uniqueCounty['Latitude'] = uniqueCounty['County Lat/long'].apply(lambda x:x.split(', ')[0])
+        uniqueCounty['Longitude'] = uniqueCounty['County Lat/long'].apply(lambda x:x.split(', ')[1])
+        uniqueCounty = uniqueCounty.drop('County Lat/long', axis=1)
+        uniqueCounty = uniqueCounty.set_index('county, state')
+        return uniqueCounty
 
-#getCoord:
-#Input: location string
-#If the geocode object has valid latitude and longitude fields: return '<latitude>, <longitude>'
-#Else: return '0, 0'
-def getCoord(county):
-    location = do_geocode(county)
-    try:
-        print(county,location.latitude)
-        return str(location.latitude)+', '+str(location.longitude)
-    except:
-        print(county, "not found")
-        return '0, 0'
-
-#Create DataFrame of unique 'county, state' objects
-#   There are many repeated county names throughout the country
-def getLatLongFrame():
-    uniqueCounty = pd.DataFrame()
-    df['county, state'] = df['county']+' County, '+df['state']
-    uniqueCounty['county, state'] = df['county, state'].unique()
-    uniqueCounty['County Lat/long'] = uniqueCounty['county, state'].apply(getCoord)
-    return uniqueCounty
+    def setMetaInfo(self):
+        outputFileName = 'countyCoordinates'
+        moduleClassName = 'GeoData'
+        source = 'geopy nominatim'
+        domain = 'CensusCounties'
+        author = 'Geopy data'
+        return {'outputFileName':outputFileName,'moduleClassName':moduleClassName,'source':source,'domain':domain,'author':author}

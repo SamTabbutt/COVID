@@ -7,44 +7,44 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import os
+from .PreprocessingModule import DataModule
 
-#Define directories
-current_dir = os.path.dirname(os.path.realpath(__file__))
-working_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
-covid_dir = os.path.join(working_dir,'covid-19-data')
-county_path = os.path.join(covid_dir,'us-counties.csv')
+class ShelterData(DataModule):
+    def processData(self,df_init):
+        #Request HTTP from input url and parse as HTML
+        r = requests.get('https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place')
+        soup = BeautifulSoup(r.text, 'html.parser')
 
-#Create pandas dataframe of NYT COVID-19 county data
-df = pd.read_csv(county_path)
+        #Parse through the table which presents shelter in place data
+        table = soup.find(lambda tag: tag.name=='table')
+        rows = table.findAll(lambda tag: tag.name=='tr')
+        #Define dictionary to return the string of the date for the input of a state name
+        entries = {}
+        for i,r in enumerate(rows):
+            if i==0:
+                continue
+            entry = r.findAll('td')
+            entries.update({entry[0].getText():entry[3].getText()})
 
-def getShelterFrame():
-    #Request HTTP from input url and parse as HTML
-    r = requests.get('https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place')
-    soup = BeautifulSoup(r.text, 'html.parser')
+        #Assign a shelter in place date to each unique 'county, state' combination in the NYT COVID-19 us-counties csv
+        sipList = []
+        uniqueCounty = pd.DataFrame()
+        uniqueCounty['county, state'] = df_init.index
+        for row in uniqueCounty.index:
+            statename = uniqueCounty.iloc[row]['county, state'].split(', ')[1]
+            try:
+                sipList.append(entries[statename])
+            except:
+                sipList.append('0/0/0')
 
-    #Parse through the table which presents shelter in place data
-    table = soup.find(lambda tag: tag.name=='table')
-    rows = table.findAll(lambda tag: tag.name=='tr')
-    #Define dictionary to return the string of the date for the input of a state name
-    entries = {}
-    for i,r in enumerate(rows):
-        if i==0:
-            continue
-        entry = r.findAll('td')
-        print(entry[0].getText(),entry[3].getText())
-        entries.update({entry[0].getText():entry[3].getText()})
-
-    #Assign a shelter in place date to each unique 'county, state' combination in the NYT COVID-19 us-counties csv
-    sipList = []
-    uniqueCounty = pd.DataFrame()
-    df['county, state'] = df['county']+' County, '+df['state']
-    uniqueCounty['county, state'] = df['county, state'].unique()
-    for row in uniqueCounty.index:
-        statename = uniqueCounty.iloc[row]['county, state'].split(', ')[1]
-        try:
-            sipList.append(entries[statename])
-        except:
-            sipList.append('0/0/0')
-
-    uniqueCounty['SIP Order Date'] = sipList
-    return uniqueCounty
+        uniqueCounty['SIP Order Date'] = sipList
+        uniqueCounty = uniqueCounty.set_index('county, state')
+        return uniqueCounty
+    
+    def setMetaInfo(self):
+        outputFileName = 'shelterData'
+        moduleClassName = 'ShelterData'
+        source = 'finra.org'
+        domain = 'CensusCounties'
+        author = 'finra'
+        return {'outputFileName':outputFileName,'moduleClassName':moduleClassName,'source':source,'domain':domain,'author':author}
