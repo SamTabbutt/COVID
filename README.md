@@ -16,7 +16,7 @@ The project is currently under rennovation to fit a modular model for updating t
 
 Here is a general layout of the new project structure:
 
-![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Layout 2.jpg)
+![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Layout2.jpg)
 
 ## Phasing out the old project layout
 
