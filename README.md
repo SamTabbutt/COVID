@@ -5,16 +5,18 @@ There are two main sources of high-dimentional data available through this proje
 
 ## Project Structure:
 
-The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the current preprocessed data consists of:
+The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the preprocessed data consists of:
 - 2010 US Census Data
 - Geographic coordinate data
 - Shelter in place order dates data
 - Logistical and Exponential fits of coronavirus cases
+
 The project is structured to house Processing modules which parse data and fit data to a **common domain** of 'county, state'.
-- The phrase **common domain** is used frequently throughout this project, and refers to the set of unique 'county, state' combinations available in the 2010 US Census Dataset. In a mathematical sense, it is the domain of any column function applied to a resulting column.
+- The phrase **common domain** is used frequently throughout this project, and refers to the set of unique 'county, state' combinations available in the 2010 US Census Dataset. In a mathematical sense, it is the domain of any function with the range of values as the resulting column.
+
 The modules are called through the python file ```RunProcessModules```.
 
-Once the data is preprocessed and stored, it is accessible via ```LocationDict.py```, and through the object ```locationDict```, the data can be easily mutated, analyzed, and visualized. 
+Once the data is preprocessed and stored, it is accessible via ```LocationDict.py```, through the object ```locationDict``` the data can be easily mutated, analyzed, and visualized. 
 
 The project currently contains ```LogisticDash.py``` which is an example dashboard of how data can be demonstrated through ```locationDict``` and the data source ```DataSources/covid-19-data/us-counties.csv```
 
@@ -26,7 +28,7 @@ The project currently contains ```LogisticDash.py``` which is an example dashboa
 - Process 4: The dataframe is passed through a format verification gate and, if properly formatted, the meta data for that set is recorded in ```LocationDataManage/metaData.csv```, and the preprocessed data is saved as a unique .csv file in ```LocationDataManage/```
 - Process 5: The data is called by ```LocationDict.py``` and mutible to visualize and analyze. 
 
-#### Running the process modules:
+#### Running the preprocessing modules:
 RunProcessModules.py:
 
 Discription: The file is run to populate and update the data files in the folder ```'PreprocessedCountyData/'``` as well as update ```PreprocessedCountyData/metaData.csv```
@@ -35,22 +37,17 @@ Command line interface:
 - command parameters:
   - [1] - 'include' or 'exclude'
     - if [1] == 'include', then:
-      - [2] - 'all' - runs each process module provided in fullModuleClassList
+      - [2] == 'all' : runs each process module provided in fullModuleClassList
       - [2],[3],[4],... - name of each DataModule child to run separated by ' '
     - if [1] == 'exclude', then:
       - [2],[3],[4],... - name of each DataModule to exclude from running sequence separated by ' '
 - EXAMPLES
   - To run modules 'ShelterData' and 'CensusData':
-      python RunProcessModules.py include ShelterData CensusData
+      ```python RunProcessModules.py include ShelterData CensusData```
   - To run all modules excluing 'GeoData':
-      python RunProcessModules.py exclude GeoData
+      ```python RunProcessModules.py exclude GeoData```
   - To run all modules:
-      python RunProcessModules.py include all
-
-UPDATES PROCEDURE NOTE:
-- In the addition of a process module, update the list:
-
-```fullModuleClassList+= <data_module_class_name>```
+      ```python RunProcessModules.py include all```
 
 #### Adding a preprocessing module:
 To contribute data to the set of preprocessed data, one must create a preprocessing module and save it in the ```ProcessModules/``` file path.
