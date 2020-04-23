@@ -5,7 +5,7 @@ There are two main sources of high-dimentional data available through this proje
 
 ## Project Structure:
 
-The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the current preprocessed data consists of:
+The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the preprocessed data consists of:
 - 2010 US Census Data
 - Geographic coordinate data
 - Shelter in place order dates data
