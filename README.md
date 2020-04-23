@@ -1,42 +1,101 @@
 # COVID
 This project combines data from various sources in attempt to provide accessible routes of analysis of COVID-19 based on location-specific data. 
 
-There are two main sources of high-dimentional data available through this project. The first is the raw data cloned from the [New York Times COVID-19 database](https://github.com/nytimes/covid-19-data), including case and death data from each county in the United States. This data is available through a .csv file. The second is a dynamic Pandas dataFrame as a conglomerate of data scraped from three sources. 
+There are two main sources of high-dimentional data available through this project. The first is the raw data cloned from the [New York Times COVID-19 database](https://github.com/nytimes/covid-19-data), including case and death data from each county in the United States. This data is available through a .csv file. The second is a dynamic Pandas dataFrame as a conglomerate of data. The format of the project allows for any extention of data as it applied to United States county-specific data.
 
-## In-progress updates:
+## Project Structure:
 
-The project is currently under rennovation to fit a modular model for updating the location data, including well-documented meta-data information and a format for easily contributing further data from various sources to the project. The new structure can be thought of as five main processes:
+The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the current preprocessed data consists of:
+- 2010 US Census Data
+- Geographic coordinate data
+- Shelter in place order dates data
+- Logistical and Exponential fits of coronavirus cases
+The project is structured to house Processing modules which parse data and fit data to a **common domain** of 'county, state'.
+- The phrase **common domain** is used frequently throughout this project, and refers to the set of unique 'county, state' combinations available in the 2010 US Census Dataset. In a mathematical sense, it is the domain of any column function applied to a resulting column.
+The modules are called through the python file ```RunProcessModules```.
 
-**The Processes:**
+Once the data is preprocessed and stored, it is accessible via ```LocationDict.py```, and through the object ```locationDict```, the data can be easily mutated, analyzed, and visualized. 
+
+The project currently contains ```LogisticDash.py``` which is an example dashboard of how data can be demonstrated through ```locationDict``` and the data source ```DataSources/covid-19-data/us-counties.csv```
+
+### Data Pipeline
+![text](https://github.com/SamTabbutt/COVID/blob/master/Misc/Display/Generalized.jpg)
 - Process 1: Data is located from a source
-- Process 2: Data is formatted into a common domain using the ```PreprocessingModule.py``` format
+- Process 2: Data is formatted into a **common domain** using the ```PreprocessingModule.py``` format
 - Process 3: The unique data module is run by ```RunProcessingModule.py``` and returns a data frame
 - Process 4: The dataframe is passed through a format verification gate and, if properly formatted, the meta data for that set is recorded in ```LocationDataManage/metaData.csv```, and the preprocessed data is saved as a unique .csv file in ```LocationDataManage/```
 - Process 5: The data is called by ```LocationDict.py``` and mutible to visualize and analyze. 
 
-Here is a general layout of the new project structure:
+#### Running the process modules:
+RunProcessModules.py:
 
-![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Generalized.jpg)
+Discription: The file is run to populate and update the data files in the folder ```'PreprocessedCountyData/'``` as well as update ```PreprocessedCountyData/metaData.csv```
 
-## Project Layout
+Command line interface:
+- command parameters:
+  - [1] - 'include' or 'exclude'
+    - if [1] == 'include', then:
+      - [2] - 'all' - runs each process module provided in fullModuleClassList
+      - [2],[3],[4],... - name of each DataModule child to run separated by ' '
+    - if [1] == 'exclude', then:
+      - [2],[3],[4],... - name of each DataModule to exclude from running sequence separated by ' '
+- EXAMPLES
+  - To run modules 'ShelterData' and 'CensusData':
+      python RunProcessModules.py include ShelterData CensusData
+  - To run all modules excluing 'GeoData':
+      python RunProcessModules.py exclude GeoData
+  - To run all modules:
+      python RunProcessModules.py include all
 
-![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Layout.jpg)
+UPDATES PROCEDURE NOTE:
+- In the addition of a process module, update the list:
+
+```fullModuleClassList+= <data_module_class_name>```
+
+#### Adding a preprocessing module:
+To contribute data to the set of preprocessed data, one must create a preprocessing module and save it in the ```ProcessModules/``` file path.
+
+A preprocessing module has two strict requirements:
+- It must contain a field ```self.df``` which is a pandas dataframe with the index as the **common domain**, which is a list of each unique county, state combination in the 2010 US census database. 
+- It must contain a method ```getMetaInfo(self)``` which returns a dictionary of metaData regarding the data module, including:
+  - ```'moduleClassName'```: the name of the object
+  - ```'Source'```: the source of the data in the module
+  - ```'Domain'```: In the current iteration of the pipeline, each module must have the domain ```'CensusCounties'```
+  - ```'Author'```: The author of the module/data source
+  - ```'field count'```: The number of data fields in the dataset
+  - ```'field names'```: A list of the name of each field in the data set
+  - ```'field types'```: A list of the datatype of each field in the data set
+
+For ease of use,  ```PreprocessingDataModule.py``` has been created as the parent to any preprocessing data module, in which the only necesarry updates are:
+- Update the method ```processData(seld,df_init)```. The dataframe ```df_init``` is passed as a dataframe solely consisting of an index which is the **common domain**. The method must return a dataframe maintaining the index of ```df_init```.
+- Update the method ```setMetaInfo(self)``` to house the correct metadata info intrinsic to the dataset.
+
+Once a new module has been created and saved in the ```ProcessModules/``` path, the module must be added to the file ```ProcessModules/__init__.py```, and the list of object names: ```fullModuleClassList``` must be updated with the name of the new module. 
+
 
 ### LocationDict
 The location dictionary is the main resource for inquiries regarding location specific variables of the COVID data collected and distributed through the New York Times. locationDict is the primary object in LocationDict.py. It merges data of each county in the United States into one data frame which can be called directly, or can be used to easily return subsets of the data frame based on a specific state of interest. 
 
-**Preparing the dictionary:**
+#### Preparing the dictionary:
 
-The .csv files necesarry to run LocationDict are stored in the filepah ```<working_dir>/counties/```. To maintain up-to-date data for these files, run the python file ```<working_dir>/LocationDataManage/SaveLocationData.py```
+Once the preprocessing modules have been run and populated the folder ```PreprocessedCountyData/``` with the respective .csv files, ```LocationDict.py``` is capable of easily combining and dropping necesarry data columns from the pool of collected and preprocessed data. 
 
-To include up-to-date statistical data for each county, run the python file ```<working_dir>/StatisticalAnalysis/LogisticalFit.py```. Python scripts for any other fit data of interest should be added to the folder ```<worrking_dir>/StatisticalAnalysis``` and follow the structure of ```LogisticalFit.py``` to operate in a modular fashion to the existing format.
+The ```metaData.csv``` file is a good resource to understand what data is available to be accessed by locationDict, as all updated .csv files will be recorded in the ```metaData.csv``` file.
 
-**Using locationDict class:**
+#### Using locationDict class:
 
-Members:
+By default, creating an instance of ```locationDict``` will include the all data in ```PreprocessedCountyData/```
+
+To create an instance of ```locationDict``` which does not include all data in ```PreprocessedCountyData/```:
+- set parameter ```useAll = False```
+- set parameter ```include = ['<data_module[0]>','<data_module[1]>',...,'<data_module[n]>']```
+- EXAMPLE:
+    locDict = locationDict(useAll=False,include=['CensusData','LogisticalFit'])
+
+Once an instance of ```locationDict``` has been created, there are two fields for data manipulation, visualization, and analysis:
 - df:
   - df is the composite pandas dataframe of all counties in the united states
-  - Index: ```'<county name\{' County',' Parish',' Borough'}>, <state name>'```
+  - Index: **common domain**
   - Example for indexing 'King County, Washington':
  
         df.loc['King, Washington']
@@ -48,55 +107,8 @@ Members:
        
         dict['Washington']
 
-Fields:
-- **INDEX** : 'county, state':
-  - description-- unique county, state combination of county of interest
-  - format-- ```'<county_name\{'County','Parish','Borough'}>, <state_name>'``` 
-  - type-- String
-- 'State':
-  - description-- the US Sate of the county of interest
-  - format-- ```<state name>```
-  - type-- String
-- 'Latitudue':
-  - description-- central latitude of the county of interest
-  - format-- ```<degree of latitude>```
-  - source-- geopy
-  - type-- float64
-- 'Logitude':
-  - description-- central longitude of the county of interest
-  - format-- ```<degree of longitude>```
-  - source-- geopy
-  - type-- float64
-- 'Population':
-  - description-- total population of the county of interest
-  - format-- ```<Population>```
-  - source-- US Census
-  - type-- int64
-- 'Population Density':
-  - description-- total population density of the county of interest
-  - format-- ```<Population>/<Land area>```
-  - source-- US Census
-  - type-- float64
-- 'Land area':
-  - description-- total land area of the county of interest
-  - format-- ```<square miles>```
-  - source-- US Census
-  - type-- float64
-- 'SIP Order Date':
-  - description-- the date of shelter in place order for the state of the county of interest
-  - expceptions-- **If no shelter in place order for given state: df.loc['county, state','SIP Order Date'] = '0/0/0'**
-  - format-- ```<m/dd/yyyy>```
-  - source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
-  - type-- string by default
-   
-**If fitData == True:** 
-
-Given the file ```StatisticalAnalysis/LogisticalFit.py``` has been run, populating the file ```'counties/fitData.csv'```, each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
-- 'logist params': parameters of the fit function y=c/(1+a*(exp)^(b(x-d)))+e in string representation of the numpy array [a b c d e]
-- 'logist max error': the mean covarience of the logistic fit parameters
-- 'exp params': parameters of the fit function y=a*(exp)^(bx)+c in string representation of the numpy array [a b c]
-- 'exp max error': the mean covarience of the exponential fit parameters
-- 'first case': the date of the first recorded case of COVID-19
+**Columns:**
+The columns of the dataframe will be the columns from the chosen preprocessed datasets. By default, this will be every column listed in the ```metaData.csv ``` file. If an instance of locationDict is created of a subset of the available preprocessed datasets, then the columns will be restricted to the columns of the chosen datasets.
 
 **Examples:**
 - QUERY: Population density of King County, Washington:
@@ -137,7 +149,7 @@ locationDict is a dynamic pandas dataframe easily adapted to present location-sp
 
 
 ### An example dashboard displaying results from loogisticalFit.py:
-![text](https://github.com/SamTabbutt/COVID/blob/master/Display/Ex.gif)
+![text](https://github.com/SamTabbutt/COVID/blob/master/Misc/Display/Ex.gif)
 
 
 The data collected from the NYT COVID-19 data set combined with the data from locationDict create dynamic opportunities for exploring variables of the trends of the virus.

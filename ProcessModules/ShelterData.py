@@ -1,14 +1,17 @@
-#ShelterMine:
-#Input: URL https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
-#Data mine of the data presented by finra on the date of shelter in place orders by state
-#Output: dataframe of each unique 'county, state' combination in NYT COVID-19 data and its associated date of shelter in place order
-#   If the state has not implimented shelter in place, the date will read '0/0/0'
+#ShelterData.py:
+#Discription: Data mine of the data presented by finra on the date of shelter in place orders by state
+#Objects: ShelterData:
+#   Child of DataModule
+#Data Source: URL https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
+
+
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import os
 from .PreprocessingModule import DataModule
 
+#Child of DataModule to apply shelter in place data to the common domain
 class ShelterData(DataModule):
     def processData(self,df_init):
         #Request HTTP from input url and parse as HTML
@@ -26,7 +29,7 @@ class ShelterData(DataModule):
             entry = r.findAll('td')
             entries.update({entry[0].getText():entry[3].getText()})
 
-        #Assign a shelter in place date to each unique 'county, state' combination in the NYT COVID-19 us-counties csv
+        #Assign a shelter in place date to each unique 'county, state' combination in the common domain
         sipList = []
         uniqueCounty = pd.DataFrame()
         uniqueCounty['county, state'] = df_init.index
@@ -42,9 +45,8 @@ class ShelterData(DataModule):
         return uniqueCounty
     
     def setMetaInfo(self):
-        outputFileName = 'shelterData'
         moduleClassName = 'ShelterData'
         source = 'finra.org'
         domain = 'CensusCounties'
         author = 'finra'
-        return {'outputFileName':outputFileName,'moduleClassName':moduleClassName,'source':source,'domain':domain,'author':author}
+        return {'moduleName':moduleClassName,'source':source,'domain':domain,'author':author}

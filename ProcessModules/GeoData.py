@@ -1,6 +1,8 @@
-#LocationGrab:
+#GeoData.py:
+#Description: assigns geogrpahic coordinates to the common domain
+#Objects: GeoData:
+#   Child of DataModule
 #Data Input: GeoPy nominatim location data
-#Assigns a latitude and langitude to each unique county
 
 import pandas as pd
 import numpy as np
@@ -33,9 +35,8 @@ class GeoData(DataModule):
         def getCoord(county):
             #location = do_geocode(county,7)
             try:
-                '''print(county,'found.','Lat:',location.latitude,'Long:',location.longitude)
-                return str(location.latitude)+', '+str(location.longitude)'''
-                return '0, 0'
+                print(county,'found.','Lat:',location.latitude,'Long:',location.longitude)
+                return str(location.latitude)+', '+str(location.longitude)
             except:
                 print(county, "not found")
                 return '0, 0'
@@ -54,9 +55,8 @@ class GeoData(DataModule):
         return uniqueCounty
 
     def setMetaInfo(self):
-        outputFileName = 'countyCoordinates'
         moduleClassName = 'GeoData'
         source = 'geopy nominatim'
         domain = 'CensusCounties'
         author = 'Geopy data'
-        return {'outputFileName':outputFileName,'moduleClassName':moduleClassName,'source':source,'domain':domain,'author':author}
+        return {'moduleName':moduleClassName,'source':source,'domain':domain,'author':author}

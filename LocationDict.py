@@ -1,5 +1,5 @@
 #LocationDict:
-#
+#Description: LocationDict creates a dataframe with the common domain and a selected group of data in the folder 'PreprocessedCountyData/'
 #
 #Objects: 
 #   locationDict:
@@ -18,54 +18,12 @@
 #       Example for subset of df for all counties in 'Washington' state:
 #           dict['Washington']
 #
-#Fields:
-#    **INDEX** : 'county, state':
-#       description-- unique county, state combination of county of interest
-#       format-- '<county_name\{'County','Parish','Borough'}>, <state_name>'
-#       type-- String
-#   'State':
-#       description-- the US Sate of the county of interest
-#       format-- 'state name'
-#       type-- String
-#   'Latitudue':
-#       description-- central latitude of the county of interest
-#       format-- degree of latitude
-#       source-- geopy
-#       type-- float64
-#   'Logitude':
-#       description-- central longitude of the county of interest
-#       format-- degree of longitude taken from geopy
-#       source-- geopy
-#       type-- float64
-#   'Population':
-#       description-- total population of the county of interest
-#       format-- taken from 2010 census data
-#       source-- US Census
-#       type-- int64
-#   'Population Density':
-#       description-- total population density of the county of interest
-#       format-- total population/total land area of county
-#       source-- US Census
-#       type-- float64
-#   'Land area':
-#       description-- total land area of the county of interest
-#       format-- square miles
-#       source-- US Census
-#       type-- float64
-#   'SIP Order Date':
-#       description-- the date of shelter in place order for the state of the county of interest
-#       expceptions-- **If no shelter in place order for given state: df.loc['county, state','SIP Order Date'] = '0/0/0'**
-#       format-- m/dd/yyyy
-#       source-- https://www.finra.org/rules-guidance/key-topics/covid-19/shelter-in-place
-#       type-- string by default
+#Creating an instance of locationDict:
+#   By default, the dataframe will be a collection of all the data in 'PreprocessedCountyData/'
+#   To create an instance of locationDict with select data sources:
+#       set useAll=False
+#       set include = ['<data_module[0]>','<data_module[1]>',...,'<data_module[n]>']
 #
-#   
-#If fitData == True: each county will have associated logistic fit data and exponential fit data merged from 'counties/fitData.csv' including fields:
-#   'logist params': parameters of the fit function y=c/(1+a*(exp)^(b(x-d)))+e in string representation of the numpy array [a b c d e]
-#   'logist max error': the mean covarience of the logistic fit parameters
-#   'exp params': parameters of the fit function y=a*(exp)^(bx)+c in string representation of the numpy array [a b c]
-#   'exp max error': the mean covarience of the exponential fit parameters
-#   'first case': the date of the first recorded case of COVID-19
 #
 #Calling for data in locationDict examples:
 #   QUERY: Population density of King County, Washington:
@@ -101,25 +59,24 @@ census_data_path = os.path.join(county_folder,'census.csv')
 
 #create dict class to initialize a dict to call on location data
 class locationDict:
-    def __init__(self,useAll=True,keys=[]):
+    def __init__(self,useAll=True,include=[]):
         self.useAll = useAll
         self.df = self.makeCompositeDf()
         self.dict =  self.makeDict(self.df)
 
-    def makeCompositeDf(self):
-        #Build stateDict to call on for specific location data
-        #Create dataframe from coordinate and census data respectively        
-
-        #Merge the dataframes by index
+    def makeCompositeDf(self):      
+        #Merge the dataframes by index (common domain)
         if self.useAll:
             preprocessed_data_frames = []
-            for countyData in glob(county_folder+'/*'):
-                preprocessed_data_frames.append(pd.read_csv(countyData.set_index('county, state')))
+            for countyDataPath in glob(county_folder+'/*'):
+                if 'metaData' in countyDataPath:
+                    continue
+                preprocessed_data_frames.append(pd.read_csv(countyDataPath.set_index('county, state')))
             fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
         else:
             preprocessed_data_frames = []
-            for countyData in glob(county_folder+'/*'):
-                if countyData.split('/')[-1] in keys:
+            for countyDataPath in glob(county_folder+'/*'):
+                if countyDataPath.split('/')[-1].split('.csv')[0] in keys:
                     preprocessed_data_frames.append(pd.read_csv(countyData.set_index('county, state')))
             fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
         return fullcounty_df

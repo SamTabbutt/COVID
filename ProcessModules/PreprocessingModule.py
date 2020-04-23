@@ -3,7 +3,7 @@
 #
 #Objects:
 #   - DataModule:
-#       Discr: 
+#       Discr:
 #           - DataModule is the format for any file parsing raw data into the common format for locationDict.
 #           - All modules which intend to accomplish this must use DataModule as a parent, altering necesarry classes
 #       Fields:
@@ -56,12 +56,11 @@ class DataModule():
     #MUTIBLE:
     #Author-entered information about the data and desired outputFileName
     def setMetaInfo(self):
-        outputFileName = ''
         moduleClassName = ''
         source = ''
         domain = 'CensusCounties'
         author = ''
-        return {'outputFileName':outputFileName,'moduleClassName':moduleClassName,'source':source,'domain':domain,'author':author}
+        return {'moduleName':moduleClassName,'source':source,'domain':domain,'author':author}
 
     #PERMANENT
     #Parses the US Census 2010 data and extracts a list of each unique county, state combination.
