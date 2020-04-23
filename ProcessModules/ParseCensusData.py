@@ -12,7 +12,7 @@ class CensusData(DataModule):
         census_data_path = os.path.join(source_folder,'census.csv')
 
         census_df = pd.read_csv(census_data_path, encoding = "ISO-8859-1")
-        census_df = census_df[census_df['Geographic area.1'].str.contains("County") | census_df['Geographic area.1'].str.contains("Parish")| census_df['Geographic area.1'].str.contains("City")]
+        census_df = census_df[census_df['Geographic area.1'].str.contains("County") | census_df['Geographic area.1'].str.contains("Parish")| census_df['Geographic area.1'].str.contains("City")| census_df['Geographic area.1'].str.contains("Borough")]
         census_df.index = df_init.index
         #Clean census data 
         #Drop columns without intrinsic properties

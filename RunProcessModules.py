@@ -2,7 +2,7 @@ import sys
 import os
 import pandas as pd
 import numpy as np
-import LocationDataManage
+import ProcessModules
 from datetime import datetime
 
 fullModuleClassList = ['ShelterData','GeoData','CensusData']
@@ -55,13 +55,16 @@ def updateMeta(metaDf,metaInfo):
     return metaDf
 
 
-for string in LocationDataManage.__dict__:
-    val = LocationDataManage.__dict__[string]
+for string in ProcessModules.__dict__:
+    val = ProcessModules.__dict__[string]
     if string in moduleClassList:
-        processedData = val()
-        metaInfo = processedData.getMetaInfo()
-        csvFileName = metaInfo['outputFileName']
-        saveCSV(processedData,csvFileName)
-        metaDf = updateMeta(metaDf,metaInfo)
+        if callable(val):
+            processedData = val()
+            metaInfo = processedData.getMetaInfo()
+            csvFileName = metaInfo['outputFileName']
+            saveCSV(processedData,csvFileName)
+            metaDf = updateMeta(metaDf,metaInfo)
+        else:
+            print(string+' not valid object')
 
 metaDf.to_csv(metaDataLocation,index=False)
