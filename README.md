@@ -37,7 +37,7 @@ Command line interface:
 - command parameters:
   - [1] - 'include' or 'exclude'
     - if [1] == 'include', then:
-      - [2] - 'all' - runs each process module provided in fullModuleClassList
+      - [2] == 'all' : runs each process module provided in fullModuleClassList
       - [2],[3],[4],... - name of each DataModule child to run separated by ' '
     - if [1] == 'exclude', then:
       - [2],[3],[4],... - name of each DataModule to exclude from running sequence separated by ' '
