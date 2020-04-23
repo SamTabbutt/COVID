@@ -43,11 +43,11 @@ Command line interface:
       - [2],[3],[4],... - name of each DataModule to exclude from running sequence separated by ' '
 - EXAMPLES
   - To run modules 'ShelterData' and 'CensusData':
-      python RunProcessModules.py include ShelterData CensusData
+      ```python RunProcessModules.py include ShelterData CensusData```
   - To run all modules excluing 'GeoData':
-      python RunProcessModules.py exclude GeoData
+      ```python RunProcessModules.py exclude GeoData```
   - To run all modules:
-      python RunProcessModules.py include all
+      ```python RunProcessModules.py include all```
 
 #### Adding a preprocessing module:
 To contribute data to the set of preprocessed data, one must create a preprocessing module and save it in the ```ProcessModules/``` file path.
