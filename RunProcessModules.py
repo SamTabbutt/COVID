@@ -1,6 +1,9 @@
 #RunProcessModules.py:
 #Discription: The file is run to occupy the data files in the folder 'PreprocessedCountyData/'
-#Command line interface:
+#   It loops through selected data processing modules and extracts the resulting dataframe.
+#   If the dataframe meets the data format requirements, the data is saved as a .csv and updates the metaData.csv file
+#By default, RunProcessModules.py will run each module in 'FullModuleClassList'
+#If desired to run select modules, use command line interface:
 #   - command parameters:
 #       - [1] - 'include' or 'exclude'
 #           - if [1] == 'include', then:
@@ -103,6 +106,22 @@ def updateMeta(metaDf,metaInfo):
     metaDf = pd.concat([metaDf,newRow])
     return metaDf
 
+
+#verifyFormat:
+#Input:
+#   - dataModuleInst: an instance of a data module
+#Output:
+#   - Boolean: true if the dataModuleInst meets required data format. False if it does not
+def verifyFormat(dataModuleInst):
+    formatModule = ProcessModules.PreprocessingModule.DataModule()
+    formatDf = formatModule.df_init
+    sampleDf = dataModuleInst.df
+    if formatDf.index == sampleDf.index:
+        return True
+    else:
+        return False
+
+
 #Loop through each module in ProcessModules
 for string in ProcessModules.__dict__:
     #if the module name is in moduleClassList, and the module is callable, create instance of data module
@@ -110,12 +129,15 @@ for string in ProcessModules.__dict__:
     if string in moduleClassList:
         if callable(dataModule):
             processedData = dataModule()
-            #Get metaData info for the module
-            metaInfo = processedData.getMetaInfo()
-            #Save dataframe from the module
-            saveCSV(processedData,string)
-            #Update metaData
-            metaDf = updateMeta(metaDf,metaInfo)
+            if verifyFormat(processedData):
+                #Get metaData info for the module
+                metaInfo = processedData.getMetaInfo()
+                #Save dataframe from the module
+                saveCSV(processedData,string)
+                #Update metaData
+                metaDf = updateMeta(metaDf,metaInfo)
+            else:
+                print(string,'not formatted correctly')
         else:
             print(string+' not valid object')
 
