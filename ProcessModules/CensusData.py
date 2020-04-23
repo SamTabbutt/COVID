@@ -44,6 +44,7 @@ class CensusData(DataModule):
         #Remove strings from population column and set type to float
         census_df['Population'] = census_df['Population'].apply(lambda x:x.split('(')[0]).astype('float64')
         #Drop unnecesarry columns
+        census_df['Housing units'] = census_df['Housing units'].apply(lambda x:x.split('(')[0]).astype('float64')
         census_df = census_df.drop('Geographic area.1', axis=1)
         census_df = census_df.drop('Geographic area',axis=1)
         census_df = census_df.drop('Geography',axis=1)
