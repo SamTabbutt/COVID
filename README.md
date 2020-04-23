@@ -47,7 +47,7 @@ Command line interface:
   - To run all modules excluing 'GeoData':
       ```python RunProcessModules.py exclude GeoData```
   - To run all modules:
-      ```python RunProcessModules.py include all```
+      ```python RunProcessModules.py include all``` or ```python RunProcessModules.py```
 
 #### Adding a preprocessing module:
 To contribute data to the set of preprocessed data, one must create a preprocessing module and save it in the ```ProcessModules/``` file path.
@@ -87,7 +87,7 @@ To create an instance of ```locationDict``` which does not include all data in `
 - set parameter ```useAll = False```
 - set parameter ```include = ['<data_module[0]>','<data_module[1]>',...,'<data_module[n]>']```
 - EXAMPLE:
-    locDict = locationDict(useAll=False,include=['CensusData','LogisticalFit'])
+    ```locDict = locationDict(useAll=False,include=['CensusData','LogisticalFit'])```
 
 Once an instance of ```locationDict``` has been created, there are two fields for data manipulation, visualization, and analysis:
 - df:
