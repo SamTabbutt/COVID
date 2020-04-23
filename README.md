@@ -47,11 +47,6 @@ Command line interface:
   - To run all modules:
       python RunProcessModules.py include all
 
-UPDATES PROCEDURE NOTE:
-- In the addition of a process module, update the list:
-
-```fullModuleClassList+= <data_module_class_name>```
-
 #### Adding a preprocessing module:
 To contribute data to the set of preprocessed data, one must create a preprocessing module and save it in the ```ProcessModules/``` file path.
 
