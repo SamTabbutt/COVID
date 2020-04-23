@@ -87,7 +87,7 @@ To create an instance of ```locationDict``` which does not include all data in `
 - set parameter ```useAll = False```
 - set parameter ```include = ['<data_module[0]>','<data_module[1]>',...,'<data_module[n]>']```
 - EXAMPLE:
-    locDict = locationDict(useAll=False,include=['CensusData','LogisticalFit'])
+    ```locDict = locationDict(useAll=False,include=['CensusData','LogisticalFit'])```
 
 Once an instance of ```locationDict``` has been created, there are two fields for data manipulation, visualization, and analysis:
 - df:
