@@ -35,7 +35,7 @@ import ProcessModules
 from datetime import datetime
 
 #Create full list 
-fullModuleClassList = ['ShelterData','GeoData','CensusData','LogisticalFit']
+fullModuleClassList = ['ShelterData','GeoData','CensusData','LogisticalFit','IncomeData']
 
 #buildModuleClassList:
 #   Input: command list from the system
@@ -116,7 +116,7 @@ def verifyFormat(dataModuleInst):
     formatModule = ProcessModules.PreprocessingModule.DataModule()
     formatDf = formatModule.df_init
     sampleDf = dataModuleInst.df
-    if formatDf.index == sampleDf.index:
+    if formatDf.index.all() == sampleDf.index.all():
         return True
     else:
         return False
