@@ -10,6 +10,7 @@ The project is structured to house any county-specific data as it might be of in
 - Geographic coordinate data
 - Shelter in place order dates data
 - Logistical and Exponential fits of coronavirus cases
+- Median income estimates from the US Census Bureau
 
 The project is structured to house Processing modules which parse data and fit data to a **common domain** of 'county, state'.
 - The phrase **common domain** is used frequently throughout this project, and refers to the set of unique 'county, state' combinations available in the 2010 US Census Dataset. In a mathematical sense, it is the domain of any function with the range of values as the resulting column.
