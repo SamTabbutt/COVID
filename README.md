@@ -23,9 +23,9 @@ The project currently contains ```LogisticDash.py``` which is an example dashboa
 ### Data Pipeline
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Misc/Display/Generalized.jpg)
 - Process 1: Data is located from a source
-- Process 2: Data is formatted into a **common domain** using the ```PreprocessingModule.py``` format
-- Process 3: The unique data module is run by ```RunProcessingModule.py``` and returns a data frame
-- Process 4: The dataframe is passed through a format verification gate and, if properly formatted, the meta data for that set is recorded in ```LocationDataManage/metaData.csv```, and the preprocessed data is saved as a unique .csv file in ```LocationDataManage/```
+- Process 2: Data is formatted into a **common domain** using the ```PreprocessingModule.py``` format as ```<unique_data_module>.py```
+- Process 3: ```<unique_data_module>.py``` is run through ```RunProcessingModule.py``` and creates an instance of the data object.
+- Process 4: The data object's dataframe field is passed through a format verification gate and, if properly formatted, the meta data for that set is recorded in ```LocationDataManage/metaData.csv```, and the preprocessed data is saved as a unique .csv file in ```LocationDataManage/```
 - Process 5: The data is called by ```LocationDict.py``` and mutible to visualize and analyze. 
 
 #### Running the preprocessing modules:
