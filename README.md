@@ -108,38 +108,30 @@ Once an instance of ```locationDict``` has been created, there are two fields fo
 **Columns:**
 The columns of the dataframe will be the columns from the chosen preprocessed datasets. By default, this will be every column listed in the ```metaData.csv ``` file. If an instance of locationDict is created of a subset of the available preprocessed datasets, then the columns will be restricted to the columns of the chosen datasets.
 
-**Examples:**
-- QUERY: Population density of King County, Washington:
-   
-       locDict = locationDict()
-       ld = locDict.dict
-       Washington_counties = ld['Washington']
-       King_County_Pop_Density = Washington_counties.loc['King, Washington','Population Density']
+To query data from locationDict:
+- Index the dataframe or dictionary by common domain: '<county name>, <state name>'
+- Call a column by the data module source, followed by a '.', then the desired column: '<module_name>.<column name>'
+
+
+**EXAMPLES**
+- QUERY: Population density of King County, Washington from CensusData:
+    ld = locationDict().dict
+    Washington_counties = ld['Washington']
+    King_County_Pop_Density = Washington_counties.loc['King, Washington','CensusData.Population Density']
 OR
-       
-       locDict = locationDict()
-       ldf = locDict.df
-       King_County_Pop_Density = ldf.loc['King, Washington', 'Population Density']
-       
-- QUERY: Total population of Washington:
-
-       locDict = locationDict()
-       ld = locDict.dict
-       Washington_population = ld['Washington']['Population'].sum()
-
-- QUERY: Total population density of Washington:
-
-       locDict = locationDict()
-       ld = locDict.dict
-       Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['Land area'].sum()
-
+    ldf = locationDict().df
+    King_County_Pop_Density = ldf.loc['King, Washington', 'CensusData.Population Density']
+- QUERY: Total population of Washington from CensusData:
+    ld = locationDict().dict
+    Washington_population = ld['Washington']['CensusData.Population'].sum()
+- QUERY: Total population density of Washington from CensusData:
+    ld = locationDict().dict
+    Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['CensusData.Land area'].sum()
 - QUERY: Parameter 'a' of the logistical fit for King County, WA:
-
-       locDict = locationDict(fitData=True)
-       ld = locDict.dict
-       Washington_counties = ld['Washington']
-       logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
-       a = logistic_fit_params[0]
+    ld = locationDict(fitData=True).dict
+    Washington_counties = ld['Washington']
+    logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','LogisticalFit.logist params'][1:-1],sep=' ')
+    a = logistic_fit_params[0]
 
 ## Constructing Dashboards
 
