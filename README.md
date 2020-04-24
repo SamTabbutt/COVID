@@ -115,23 +115,28 @@ To query data from locationDict:
 
 **EXAMPLES**
 - QUERY: Population density of King County, Washington from CensusData:
-    ld = locationDict().dict
-    Washington_counties = ld['Washington']
-    King_County_Pop_Density = Washington_counties.loc['King, Washington','CensusData.Population Density']
+
+      ld = locationDict().dict
+      Washington_counties = ld['Washington']
+      King_County_Pop_Density = Washington_counties.loc['King, Washington','CensusData.Population Density']
 OR
-    ldf = locationDict().df
-    King_County_Pop_Density = ldf.loc['King, Washington', 'CensusData.Population Density']
+
+      ldf = locationDict().df
+      King_County_Pop_Density = ldf.loc['King, Washington', 'CensusData.Population Density']
 - QUERY: Total population of Washington from CensusData:
-    ld = locationDict().dict
-    Washington_population = ld['Washington']['CensusData.Population'].sum()
+
+      ld = locationDict().dict
+      Washington_population = ld['Washington']['CensusData.Population'].sum()
 - QUERY: Total population density of Washington from CensusData:
-    ld = locationDict().dict
-    Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['CensusData.Land area'].sum()
+
+      ld = locationDict().dict
+      Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['CensusData.Land area'].sum()
 - QUERY: Parameter 'a' of the logistical fit for King County, WA:
-    ld = locationDict(fitData=True).dict
-    Washington_counties = ld['Washington']
-    logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','LogisticalFit.logist params'][1:-1],sep=' ')
-    a = logistic_fit_params[0]
+
+      ld = locationDict(fitData=True).dict
+      Washington_counties = ld['Washington']
+      logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','LogisticalFit.logist params'][1:-1],sep=' ')
+      a = logistic_fit_params[0]
 
 ## Constructing Dashboards
 
