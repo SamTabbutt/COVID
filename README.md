@@ -109,8 +109,8 @@ Once an instance of ```locationDict``` has been created, there are two fields fo
 The columns of the dataframe will be the columns from the chosen preprocessed datasets. By default, this will be every column listed in the ```metaData.csv ``` file. If an instance of locationDict is created of a subset of the available preprocessed datasets, then the columns will be restricted to the columns of the chosen datasets.
 
 To query data from locationDict:
-- Index the dataframe or dictionary by common domain: '<county name>, <state name>'
-- Call a column by the data module source, followed by a '.', then the desired column: '<module_name>.<column name>'
+- Index the dataframe or dictionary by common domain: ```'<county name>, <state name>'```
+- Call a column by the data module source, followed by a '.', then the desired column: ```'<module_name>.<column name>'```
 
 
 **EXAMPLES**
