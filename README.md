@@ -7,7 +7,7 @@ There are two main sources of high-dimentional data available through this proje
 - [Project Structure](https://github.com/SamTabbutt/COVID#project-structure)
   - [Data Pipeline](https://github.com/SamTabbutt/COVID#data-pipeline)
     - [Processes](https://github.com/SamTabbutt/COVID#processes)
-    - [Running the process modules](https://github.com/SamTabbutt/COVID#running-the-preprocessing-modules)
+    - [Running the preprocessing modules](https://github.com/SamTabbutt/COVID#running-the-preprocessing-modules)
     - [Adding a preprocessing module](https://github.com/SamTabbutt/COVID#adding-a-preprocessing-module)
   - [LocationDict](https://github.com/SamTabbutt/COVID#locationdict)
     - [Preparing the dictionary](https://github.com/SamTabbutt/COVID#preparing-the-dictionary)
