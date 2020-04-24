@@ -3,6 +3,18 @@ This project combines data from various sources in attempt to provide accessible
 
 There are two main sources of high-dimentional data available through this project. The first is the raw data cloned from the [New York Times COVID-19 database](https://github.com/nytimes/covid-19-data), including case and death data from each county in the United States. This data is available through a .csv file. The second is a dynamic Pandas dataFrame as a conglomerate of data. The format of the project allows for any extention of data as it applied to United States county-specific data.
 
+### Contents:
+- [Project Structure](https://github.com/SamTabbutt/COVID#project-structure)
+  - [Data Pipeline](https://github.com/SamTabbutt/COVID#data-pipeline)
+    - [Processes](https://github.com/SamTabbutt/COVID#processes)
+    - [Running the process modules](https://github.com/SamTabbutt/COVID#running-the-preprocessing-modules)
+    - [Adding a preprocessing module](https://github.com/SamTabbutt/COVID#adding-a-preprocessing-module)
+  - [LocationDict](https://github.com/SamTabbutt/COVID#locationdict)
+    - [Preparing the dictionary](https://github.com/SamTabbutt/COVID#preparing-the-dictionary)
+    - [Using locationDict object](https://github.com/SamTabbutt/COVID#using-locationdict-object)
+- [Constructing Dashboards](https://github.com/SamTabbutt/COVID#constructing-dashboards)
+  - [An example dashboard](https://github.com/SamTabbutt/COVID#an-example-dashboard)
+
 ## Project Structure:
 
 The project is structured to house any county-specific data as it might be of interest to analysis of variables of the COVID-19 pandemic. In its current iteration, the preprocessed data consists of:
@@ -23,6 +35,7 @@ The project currently contains ```LogisticDash.py``` which is an example dashboa
 
 ### Data Pipeline
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Misc/Display/Generalized.jpg)
+#### Processes:
 - Process 1: Data is located from a source
 - Process 2: Data is formatted into a **common domain** using the ```PreprocessingModule.py``` format as ```<unique_data_module>.py```
 - Process 3: ```<unique_data_module>.py``` is run through ```RunProcessingModule.py``` and creates an instance of the data object.
@@ -80,7 +93,7 @@ Once the preprocessing modules have been run and populated the folder ```Preproc
 
 The ```metaData.csv``` file is a good resource to understand what data is available to be accessed by locationDict, as all updated .csv files will be recorded in the ```metaData.csv``` file.
 
-#### Using locationDict class:
+#### Using locationDict object:
 
 By default, creating an instance of ```locationDict``` will include the all data in ```PreprocessedCountyData/```
 
@@ -143,7 +156,7 @@ OR
 locationDict is a dynamic pandas dataframe easily adapted to present location-specific data for the COVID crisis. 
 
 
-### An example dashboard displaying results from loogisticalFit.py:
+### An example dashboard:
 ![text](https://github.com/SamTabbutt/COVID/blob/master/Misc/Display/Ex.gif)
 
 
