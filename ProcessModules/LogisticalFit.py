@@ -82,6 +82,11 @@ class LogisticalFit(DataModule):
         logData = logData.set_index('county, state')
         #Reset COVID-19 fit data to index on the common domain
         df = pd.concat([df_init, logData.reindex(df_init.index)], axis=1)
+        df['logist params'] = df['logist params'].fillna('[0 0 0 0 0]')
+        df['logist max error'] = df['logist max error'].fillna('0')
+        df['exp params'] = df['exp max error'].fillna('[0 0 0]')
+        df['exp max error'] = df['exp max error'].fillna('0')
+        df['first case'] = df['first case'].fillna('0/0/0')
         return df
 
     def setMetaInfo(self):

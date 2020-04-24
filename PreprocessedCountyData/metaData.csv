@@ -1,6 +1,6 @@
 moduleName,source,domain,author,field count,field names,field types,last updated
 ShelterData,finra.org,CensusCounties,finra,1,['SIP Order Date'],['object'],2020-04-23 11:54:13.855765
 GeoData,geopy nominatim,CensusCounties,Geopy data,2,"['Latitude', 'Longitude']","['object', 'object']",2020-04-23 11:54:14.303739
-LogisticalFit,scikit curve fit,CensusCounties,Sam Tabbutt,5,"['logist params', 'logist max error', 'exp params', 'exp max error', 'first case']","['object', 'float64', 'object', 'float64', 'object']",2020-04-23 12:46:17.626179
 CensusData,US 2010 Census,CensusCounties,United States Census Bureau,8,"['Population', 'Housing units', 'Total area', 'Water area', 'Land area', 'Population Density', 'Housing units Density', 'State']","['float64', 'float64', 'float64', 'float64', 'float64', 'float64', 'float64', 'object']",2020-04-23 13:49:43.926392
 IncomeData,bea.gov,CensusCounties,US Wealth Tracking,7,"['Dollars2016', 'Dollars2017', 'Dollars2018', 'RankInDollars2018', 'PercentChange2017', 'PercentChange2018', 'RankInPercentChange2018']","['float64', 'float64', 'float64', 'float64', 'float64', 'float64', 'float64']",2020-04-24 12:18:48.084069
+LogisticalFit,scikit curve fit,CensusCounties,Sam Tabbutt,5,"['logist params', 'logist max error', 'exp params', 'exp max error', 'first case']","['object', 'object', 'object', 'object', 'object']",2020-04-24 14:05:55.699205

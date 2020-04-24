@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import math
 from LocationDict import locationDict as ld
-from Bokeh.LaTexLabel import LatexLabel
+from Misc.Bokeh.LaTexLabel import LatexLabel
 import numpy as np
 from scipy import stats as scistats
 from bokeh.plotting import figure, curdoc
@@ -15,14 +15,14 @@ import bokeh.models as bm
 from bokeh.layouts import column,row
 
 #Define local location data object to pull fit, census, and shelter in place data
-locObject = ld(fitData=True)
+locObject = ld()
 locDict = locObject.dict
 locDf = locObject.df
 print(locDf.columns)
 
 #Define local directory and create COVID dataframe in pandas
 working_dir = os.path.dirname(os.path.realpath(__file__))
-covid_dir = os.path.join(working_dir,'covid-19-data')
+covid_dir = os.path.join(working_dir,'DataSources/covid-19-data')
 us_counties_path = os.path.join(covid_dir,'us-counties.csv')
 covid_data = pd.read_csv(us_counties_path)
 covid_data['county, state'] = covid_data['county']+', '+covid_data['state']
@@ -64,9 +64,9 @@ def makeHist(dataFrame,var,r):
 #      Output: a subset of locDf with expanded parameters as a column for each fit parameter and all fits with covarience<inf
 def makeLowErrorDf(paramString):
        params_df = pd.DataFrame()
-       params_df['params'] = locDf[paramString+' params'].apply(lambda x:np.fromstring(x[1:-1],sep=' '))
-       params_df['Population'] = locDf['Population']
-       params_df['error'] = locDf[paramString+' max error']
+       params_df['params'] = locDf['LogisticalFit.'+paramString+' params'].apply(lambda x:np.fromstring(x[1:-1],sep=' '))
+       params_df['Population'] = locDf['CensusData.Population']
+       params_df['error'] = locDf['LogisticalFit.'paramString+' max error']
        highErrorInd = params_df[params_df['error']<10^5].index
        lowErrorDf = params_df.drop(highErrorInd)
        paramList = []
@@ -133,8 +133,8 @@ def makeLogCurve(fit,length):
 #      output:
 #             (x,y) values for curve y=c/(1+a*e^b(x-d))+e over length with (delta)x=1 from the parameters from fitData.csv
 def getCountyTrend(name,length):
-       x = locDf.loc[name,'logist params']
-       print(locDf.loc[name,'logist max error'])
+       x = locDf.loc[name,'LogisticalFit.logist params']
+       print(locDf.loc[name,'LogisticalFit.logist max error'])
        fit = np.fromstring(x[1:-1],sep=' ')
        return makeLogCurve(fit,length)
 
@@ -152,10 +152,10 @@ def getParamsString(ar,error,first):
 
 #Initalize the dashboard with King County, Washington
 data = getCountyData('King, Washington')
-params = locDf.loc['King, Washington']['logist params']
+params = locDf.loc['King, Washington']['LogisticalFit.logist params']
 parsed_p = np.fromstring(params[1:-1],sep=' ')
-error = locDf.loc['King, Washington']['logist max error']
-first = locDf.loc['King, Washington']['first case']
+error = locDf.loc['King, Washington']['LogisticalFit.logist max error']
+first = locDf.loc['King, Washington']['LogisticalFit.first case']
 x = np.linspace(1,len(data),num=len(data))
 y = data['cases']
 
@@ -217,10 +217,10 @@ def update_plots(attr,old,new):
        xt,yt = getCountyTrend(county_state, len(data))
        source2.data = dict(x=xt,y=yt)
 
-       params = locDf.loc[county_state]['logist params']
+       params = locDf.loc[county_state]['LogisticalFit.logist params']
        parsed_p = np.fromstring(params[1:-1],sep=' ')
-       error = locDf.loc[county_state]['logist max error']
-       first = locDf.loc[county_state]['first case']
+       error = locDf.loc[county_state]['LogisticalFit.logist max error']
+       first = locDf.loc[county_state]['LogisticalFit.first case']
        stats.text = getParamsString(parsed_p,error, first)
 
 county_select.on_change('value',update_plots)

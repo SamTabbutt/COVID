@@ -24,25 +24,29 @@
 #       set useAll=False
 #       set include = ['<data_module[0]>','<data_module[1]>',...,'<data_module[n]>']
 #
+#To query data from locationDict:
+#   1) Index the dataframe or dictionary by common domain: '<county name>, <state name>'
+#   2) Call a column by the data module source, followed by a '.', then the desired column: '<module_name>.<column name>'
+#
 #
 #Calling for data in locationDict examples:
-#   QUERY: Population density of King County, Washington:
+#   QUERY: Population density of King County, Washington from CensusData:
 #       ld = locationDict().dict
 #       Washington_counties = ld['Washington']
-#       King_County_Pop_Density = Washington_counties.loc['King, Washington','Population Density']
+#       King_County_Pop_Density = Washington_counties.loc['King, Washington','CensusData.Population Density']
 #       -------------------------------------OR---------------------------------------------------
 #       ldf = locationDict().df
-#       King_County_Pop_Density = ldf.loc['King, Washington', 'Population Density']
-#   QUERY: Total population of Washington:
+#       King_County_Pop_Density = ldf.loc['King, Washington', 'CensusData.Population Density']
+#   QUERY: Total population of Washington from CensusData:
 #       ld = locationDict().dict
-#       Washington_population = ld['Washington']['Population'].sum()
-#   QUERY: Total population density of Washington:
+#       Washington_population = ld['Washington']['CensusData.Population'].sum()
+#   QUERY: Total population density of Washington from CensusData:
 #       ld = locationDict().dict
-#       Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['Land area'].sum()
+#       Washington_population_density = ld['Washington']['Population'].sum()/ld['Washington']['CensusData.Land area'].sum()
 #   QUERY: Parameter 'a' of the logistical fit for King County, WA:
 #       ld = locationDict(fitData=True).dict
 #       Washington_counties = ld['Washington']
-#       logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','logist params'][1:-1],sep=' ')
+#       logistic_fit_params = np.fromstring(Washington_counties.loc['King, Washington','LogisticalFit.logist params'][1:-1],sep=' ')
 #       a = logistic_fit_params[0]
 
 
@@ -71,13 +75,25 @@ class locationDict:
             for countyDataPath in glob(county_folder+'/*'):
                 if 'metaData' in countyDataPath:
                     continue
-                preprocessed_data_frames.append(pd.read_csv(countyDataPath.set_index('county, state')))
+                frame_init = pd.read_csv(countyDataPath).set_index('county, state')
+                frame_name = countyDataPath.split('/')[-1].split('.csv')[0]
+                new_cols = []
+                for col in frame_init.columns:
+                    new_cols.append(frame_name+'.'+col)
+                frame_init.columns = new_cols
+                preprocessed_data_frames.append(frame_init)
             fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
         else:
             preprocessed_data_frames = []
             for countyDataPath in glob(county_folder+'/*'):
                 if countyDataPath.split('/')[-1].split('.csv')[0] in keys:
-                    preprocessed_data_frames.append(pd.read_csv(countyData.set_index('county, state')))
+                    frame_init = pd.read_csv(countyDataPath).set_index('county, state')
+                    frame_name = countyDataPath.split('/')[-1].split('.csv')[0]
+                    new_cols = []
+                    for col in frame_init.columns:
+                        new_cols.append(frame_name+'.'+col)
+                    frame_init.columns = new_cols
+                    preprocessed_data_frames.append(frame_init)
             fullcounty_df = pd.concat(preprocessed_data_frames,axis=1,join='inner')
         return fullcounty_df
     
